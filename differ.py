@@ -15,7 +15,7 @@ def recursive_glob(rootdir='.', suffix=''):
             for filename in filenames if filename.endswith(suffix)]          
             
 def get_corresponding_path(file_name, current_dir, wanted_dir):
-    return file_name.replace(current_dir, wanted_dir)
+    return file_name.replace(current_dir, wanted_dir, 1)
 
 def hard_add_file(original_file, new_location):
     if (os.path.exists(new_location)):
@@ -25,6 +25,9 @@ def hard_add_file(original_file, new_location):
     copyfile(original_file, new_location)
 
 differing_files = []
+added_from_engine = []
+added_from_dev = []
+
 found_files = {""}
 new_engine_files = recursive_glob(new_engine_string)            
 for file in new_engine_files:
@@ -40,6 +43,7 @@ for file in new_engine_files:
    elif not old_path.is_file():
       # the file doesn't exist in the old version, add it
       hard_add_file(file, out_string)
+      added_from_engine.append(file)
    elif filecmp.cmp(in_old_string, file):
        # old and new engine file are the same
        if (Path(dev_string).is_file()):
@@ -61,8 +65,13 @@ for file in dev_files:
     if ( not (get_corresponding_path(file, dev_engine_string, "") in found_files)):
         # if we didn't have this file, add it
         hard_add_file(file, get_corresponding_path(file, dev_engine_string, output_string))
+        added_from_dev.append(file)
 
-print("troubling files :" + str(differing_files))
-        
-    
-    
+added_engine_file = open("added_from_engine.txt", "w")
+added_engine_file.write(str(added_from_engine))
+added_dev_file = open("added_from_dev.txt", "w")
+added_dev_file.write(str(added_from_dev))
+differing_file = open("differing_files.txt", 'w')
+differing_file.write(str(differing_files))
+
+print("All done!")
