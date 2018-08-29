@@ -11,7 +11,7 @@ dev_engine_string = "tbe_TJCGWS024_8612"
 output_string = "output"
 to_merge_string = "to_merge"
 
-should_be_compared_line_by_line = {".cpp", ".h", ".xml", ".cs", ".usf", ".ush", ".txt", ".ini", ".sh"}
+should_be_compared_line_by_line = {".cpp", ".h", ".xml", ".cs", ".usf", ".ush", ".txt", ".ini", ".sh", ".m", ".vxproj", ".c", ".mm", ".html", ".cmake", ".inl", ".config", ".csproj", ".uplugin"}
 
 def recursive_glob(rootdir='.', suffix=''):
     return [os.path.join(looproot, filename)
@@ -43,6 +43,7 @@ def cmp_file_agnostic_line_ending(path_1, path_2):
                     return False
     except:
         print("trouble reading file: " + path_1)
+        return False
     return True
 
 
