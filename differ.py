@@ -7,11 +7,11 @@ from shutil import copyfile
 
 new_engine_string = "UnrealEngine"
 old_engine_string = "oldUE"
-dev_engine_string = "tbe_TJCGWS024_8612"
-output_string = "output"
+dev_engine_string = "D:/Perforce/tbe_TJCGWS024_8612"
+output_string = "D:/Perforce/tbe_TJCGWS024_TestMergeScript_5802"
 to_merge_string = "to_merge"
 
-should_be_compared_line_by_line = {".cpp", ".h", ".xml", ".cs", ".usf", ".ush", ".txt", ".ini", ".sh", ".m", ".vxproj", ".c", ".mm", ".html", ".cmake", ".inl", ".config", ".csproj", ".uplugin"}
+should_be_compared_line_by_line = {".cpp", ".h", ".xml", ".cs", ".usf", ".ush", ".txt", ".ini", ".sh", ".m", ".vxproj", ".c", ".mm", ".html", ".cmake", ".inl", ".config", ".csproj", ".uplugin", ".template", ".java", ".py"}
 
 def recursive_glob(rootdir='.', suffix=''):
     return [os.path.join(looproot, filename)
@@ -101,8 +101,11 @@ print("Going through dev files...")
 for file in dev_files:
    if not (get_corresponding_path(file, dev_engine_string, "") in found_files) and not Path(get_corresponding_path(file, dev_engine_string, old_engine_string)).is_file():
         # if we didn't have this file before, and it didn't exist in the old engine, add it
-        hard_add_file(file, get_corresponding_path(file, dev_engine_string, output_string))
-        added_from_dev.append(file)
+        try:
+            hard_add_file(file, get_corresponding_path(file, dev_engine_string, output_string))
+            added_from_dev.append(file)
+        except PermissionError:
+            print("error adding: " + file)
    count += 1
    if (count % 1000 == 0):
        print("worked through " + str(count) + " of " + str(numfiles) + " files")
