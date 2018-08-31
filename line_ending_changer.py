@@ -1,6 +1,6 @@
 from file_functions import *
 
-location = "test"
+location = "oldUE"
 line_ending_sensitive = {".cpp", ".h", ".xml", ".cs", ".usf", ".ush", ".txt", ".ini", ".sh", ".m", ".vxproj", ".c", ".mm", ".html", ".cmake", ".inl", ".config", ".csproj", ".uplugin", ".template", ".java", ".py"}
 
 

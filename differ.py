@@ -7,8 +7,8 @@ from shutil import copyfile
 import io
 from file_functions import *
 
-new_engine_string = "D:/Perforce/tbe_TJCGWS024_TestMergeScript_5802"
-old_engine_string = "test"
+new_engine_string = "UnrealEngine_experiment"
+old_engine_string = "oldUE"
 dev_engine_string = "D:/Perforce/tbe_TJCGWS024_8612"
 output_string = "testput"
 to_merge_string = "to_merge3"
@@ -19,20 +19,8 @@ added_from_engine = []
 added_from_dev = []
 
 found_files = {""}
-new_engine_files = recursive_glob(new_engine_string)     
 
-count = 0
-numfiles = len(new_engine_files)
-
-windows_line_ending = '\r\n'.encode()
-linux_line_ending = '\n'.encode()
-
-
-def merge():
-    print (count)
-
-print ("Going through engine files...")
-for file in new_engine_files:
+def merge_file(file):
    in_old_string = get_corresponding_path(file, new_engine_string, old_engine_string)
    out_string = get_corresponding_path(file, new_engine_string, output_string)
    dev_string = get_corresponding_path(file, new_engine_string, dev_engine_string)
@@ -41,7 +29,7 @@ for file in new_engine_files:
    new_path = Path(file)
    old_path = Path(in_old_string)
    if not new_path.is_file():
-      continue
+      return
    
    elif not old_path.is_file():
         # the file doesn't exist in the old version, add it
@@ -61,18 +49,10 @@ for file in new_engine_files:
         hard_add_file(file, out_string)
    
    found_files.add(get_corresponding_path(file, new_engine_string, ""))
-   count += 1
-   if ((count % 1000) == 0):
-       print("worked through " + str(count) + " of " + str(numfiles) + " files")
-
-dev_files = recursive_glob(dev_engine_string)
 
 
-count = 0;
-numfiles = len(dev_files)
 
-print("Going through dev files...")
-for file in dev_files:
+def dev_merge(file):
    if not (get_corresponding_path(file, dev_engine_string, "") in found_files) and not Path(get_corresponding_path(file, dev_engine_string, old_engine_string)).is_file():
         # if we didn't have this file before, and it didn't exist in the old engine, add it
         try:
@@ -80,9 +60,14 @@ for file in dev_files:
             added_from_dev.append(file)
         except PermissionError:
             print("error adding: " + file)
-   count += 1
-   if (count % 1000 == 0):
-       print("worked through " + str(count) + " of " + str(numfiles) + " files")
+
+
+
+# here is where the program actually executes
+print ("Going through engine files...")
+execute_for_all_files(new_engine_string, merge_file)
+print ("Going through dev files...")
+execute_for_all_files(dev_engine_string, dev_merge)
 
 added_engine_file = open("added_from_engine.txt", "w")
 added_engine_file.write(str(added_from_engine).replace(",", "\n"))

@@ -6,8 +6,6 @@ from pathlib import Path
 from shutil import copyfile
 import io
 
-convert_line_endings = True
-
 def recursive_glob(rootdir='.', suffix=''):
     return [os.path.join(looproot, filename)
             for looproot, _, filenames in os.walk(rootdir)
@@ -29,5 +27,10 @@ def cmp_file(path_1, path_2):
 
 def execute_for_all_files(location, function):
     files = recursive_glob(location)
+    count = 0
+    numfiles = len(files)
     for file in files:
         function(file)
+        count += 1
+        if ((count % 500) == 0):
+            print('%.1f'%(float(count)*100/float(numfiles)) + "%")
