@@ -14,7 +14,9 @@ def recursive_glob(rootdir='.', suffix=''):
 def get_corresponding_path(file_name, current_dir, wanted_dir):
     return file_name.replace(current_dir, wanted_dir, 1)
 
-def hard_add_file(original_file, new_location):
+def add_file(original_file, new_location):
+    if (original_file == new_location):
+        return
     if (os.path.exists(new_location)):
         os.remove(new_location)
     if (not os.path.exists(os.path.dirname(new_location))):

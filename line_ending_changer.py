@@ -1,6 +1,5 @@
 from file_functions import *
 
-location = "oldUE"
 line_ending_sensitive = {".cpp", ".h", ".xml", ".cs", ".usf", ".ush", ".txt", ".ini", ".sh", ".m", ".vxproj", ".c", ".mm", ".html", ".cmake", ".inl", ".config", ".csproj", ".uplugin", ".template", ".java", ".py"}
 
 
@@ -19,4 +18,3 @@ def convert_line_ending(file):
         except:
             print("unable to change lines of file: " + file)
 
-execute_for_all_files(location, convert_line_ending)
